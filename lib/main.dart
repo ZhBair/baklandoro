@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 void main() {
@@ -26,6 +28,74 @@ class _HomeAppState extends State<HomeApp> {
 
 
 
+// the buisness logic
+int seconds = 0, minutes = 0, hours = 0;
+String digitSeconds = "00", digitMinutes = "00", digitHours = "00";
+Timer? timer;
+bool started = false;
+List laps = [];
+
+//creat stop timer function
+
+  void stop() {
+    timer!.cancel();
+    setState(() {
+      started = false;
+    });
+  }
+
+//creat RESET function
+
+  void reset() {
+    timer!.cancel();
+    setState(() {
+      seconds = 0;
+      minutes = 0;
+      hours = 0;
+
+      digitSeconds = "00";
+      digitMinutes = "00";
+      digitHours = "00";
+
+      started = false;
+    });
+  }
+
+  void addLaps() {
+    String lap = "$digitHours:$digitMinutes:$digitSeconds";
+    setState(() {
+      laps.add(lap);
+    });
+  }
+
+  //creat START function
+  void start() {
+    started = true;
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      int localSeconds = seconds + 1;
+      int localMinutes = minutes;
+      int localHours = hours;
+
+      if (localSeconds > 59) {
+        if (localMinutes > 59) {
+          localHours++;
+          localMinutes = 0;
+        } else {
+          localMinutes++;
+          localSeconds = 0;
+        }
+      }
+      setState(() {
+        seconds = localSeconds;
+        minutes = localMinutes;
+        hours = localHours;
+        digitSeconds = (seconds >= 10) ?"$seconds":"0$seconds";
+        digitMinutes = (minutes >= 10) ?"$minutes":"0$minutes";
+        digitHours = (hours >= 10) ?"$hours":"0$hours";
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +120,7 @@ class _HomeAppState extends State<HomeApp> {
               ),
               Center(
                 child: Text(
-                  "00:00:00",
+                  "$digitHours:$digitMinutes:$digitSeconds",
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 82.0,
@@ -63,6 +133,34 @@ class _HomeAppState extends State<HomeApp> {
                 decoration: BoxDecoration(
                   color: Color(0xFF323F68),
                 ),
+                //add in list build
+                child: ListView.builder(
+                  itemCount: laps.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Lap n*${index + 1}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                          Text(
+                            "${laps[index]}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
               SizedBox(
                 height: 20.0,
@@ -72,11 +170,13 @@ class _HomeAppState extends State<HomeApp> {
                 children: [
                   Expanded(
                     child: RawMaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        (!started) ?start():stop();
+                      },
                       shape: const StadiumBorder(
                           side: BorderSide(color: Colors.blue)),
                       child: Text(
-                        "Start",
+                        (!started) ? "Start" : "Pause",
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
@@ -86,14 +186,18 @@ class _HomeAppState extends State<HomeApp> {
                   ),
                   IconButton(
                       color: Colors.white,
-                      onPressed: () {},
+                      onPressed: () {
+                        addLaps();
+                      },
                       icon: Icon(Icons.flag)),
                   SizedBox(
                     width: 8.0,
                   ),
                   Expanded(
                     child: RawMaterialButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        reset();
+                        },
                       fillColor: Colors.blue,
                       shape: StadiumBorder(),
                       child: Text(
