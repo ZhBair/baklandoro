@@ -23,6 +23,9 @@ class HomeApp extends StatefulWidget {
 }
 
 class _HomeAppState extends State<HomeApp> {
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,18 +38,72 @@ class _HomeAppState extends State<HomeApp> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Center(
+                child: Text("Baklandoro App",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 28.0,
+                      fontWeight: FontWeight.bold,
+                    )),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Center(
                 child: Text(
-                  "Baklandoro Timer App",
-                  style: TextStyle(color: Colors.white,
-                  fontSize: 28.0,
-                  fontWeight: FontWeight.bold,
-                  )
+                  "00:00:00",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 82.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Container(
+                height: 400.0,
+                decoration: BoxDecoration(
+                  color: Color(0xFF323F68),
                 ),
               ),
               SizedBox(
                 height: 20.0,
               ),
-              Container()
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: RawMaterialButton(
+                      onPressed: () {},
+                      shape: const StadiumBorder(
+                          side: BorderSide(color: Colors.blue)),
+                      child: Text(
+                        "Start",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 8.0,
+                  ),
+                  IconButton(
+                      color: Colors.white,
+                      onPressed: () {},
+                      icon: Icon(Icons.flag)),
+                  SizedBox(
+                    width: 8.0,
+                  ),
+                  Expanded(
+                    child: RawMaterialButton(
+                      onPressed: () {},
+                      fillColor: Colors.blue,
+                      shape: StadiumBorder(),
+                      child: Text(
+                        "Reset",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
