@@ -29,8 +29,8 @@ class _HomeAppState extends State<HomeApp> {
 
 
 // the buisness logic
-int seconds = 0, minutes = 0, hours = 0;
-String digitSeconds = "00", digitMinutes = "00", digitHours = "00";
+int seconds = 0, minutes = 25, hours = 0;
+String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
 Timer? timer;
 bool started = false;
 List laps = [];
@@ -50,14 +50,15 @@ List laps = [];
     timer!.cancel();
     setState(() {
       seconds = 0;
-      minutes = 0;
+      minutes = 25;
       hours = 0;
 
       digitSeconds = "00";
-      digitMinutes = "00";
+      digitMinutes = "25";
       digitHours = "00";
 
       started = false;
+
     });
   }
 
@@ -72,19 +73,20 @@ List laps = [];
   void start() {
     started = true;
     timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      int localSeconds = seconds + 1;
+      int localSeconds = seconds;
       int localMinutes = minutes;
       int localHours = hours;
 
-      if (localSeconds > 59) {
-        if (localMinutes > 59) {
-          localHours++;
-          localMinutes = 0;
+      if (localSeconds == 0) {
+        if (localMinutes == 0) {
+          localHours--;
+          localMinutes = 59;
         } else {
-          localMinutes++;
-          localSeconds = 0;
+          localMinutes--;
+          localSeconds = 60;
         }
       }
+      localSeconds--;
       setState(() {
         seconds = localSeconds;
         minutes = localMinutes;
@@ -99,7 +101,7 @@ List laps = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF1C2757), // change to baklazhan
+      backgroundColor: Color(0xFF151026),
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -128,10 +130,10 @@ List laps = [];
                   ),
                 ),
               ),
-              Container(
+              /*Container(
                 height: 400.0,
                 decoration: BoxDecoration(
-                  color: Color(0xFF323F68),
+                  color: Color(0x00151016),
                 ),
                 //add in list build
                 child: ListView.builder(
@@ -162,6 +164,7 @@ List laps = [];
                   },
                 ),
               ),
+              */
               SizedBox(
                 height: 20.0,
               ),
@@ -181,6 +184,7 @@ List laps = [];
                       ),
                     ),
                   ),
+                  /*
                   SizedBox(
                     width: 8.0,
                   ),
@@ -193,6 +197,7 @@ List laps = [];
                   SizedBox(
                     width: 8.0,
                   ),
+                   */
                   Expanded(
                     child: RawMaterialButton(
                       onPressed: () {
