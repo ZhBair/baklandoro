@@ -34,6 +34,8 @@ String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
 Timer? timer;
 bool started = false;
 List laps = [];
+Color colorText = Colors.white;
+Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
 
 //creat stop timer function
 
@@ -63,7 +65,8 @@ List laps = [];
   }
 
   void addLaps() {
-    String lap = "$digitHours:$digitMinutes:$digitSeconds";
+    int? j = map["job"];
+    String lap = "JOB : $j";
     setState(() {
       laps.add(lap);
     });
@@ -72,7 +75,7 @@ List laps = [];
   //creat START function
   void start() {
     started = true;
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(Duration(milliseconds: 10), (timer) { //change seconds to milis
       int localSeconds = seconds;
       int localMinutes = minutes;
       int localHours = hours;
@@ -85,6 +88,53 @@ List laps = [];
           localMinutes--;
           localSeconds = 60;
         }
+      }
+      if (localHours == 0 && localMinutes == 0 && localSeconds == 1) {
+        if (map["job"] == 0){
+          map["job"] = 1;
+          localMinutes = 5;
+          colorText = Colors.green;
+          addLaps();
+        }
+        else if(map["job"] == 1 && map["shortBreak"] == 0) {
+          localMinutes = 25;
+          colorText = Colors.white;
+          map["shortBreak"] = map["shortBreak"]! + 1;
+        }
+        else if (map["job"] == 1 && map["shortBreak"] == 1) {
+          localMinutes = 5;
+          colorText = Colors.green;
+          map["job"] = map["job"]! + 1;
+          addLaps();
+        }
+        else if (map["job"] == 2 && map["shortBreak"] == 1) {
+          localMinutes = 25;
+          colorText = Colors.white;
+          map["shortBreak"] = map["shortBreak"]! + 1;
+        }
+        else if (map["job"] == 2 && map["shortBreak"] == 2) {
+          localMinutes = 5;
+          colorText = Colors.green;
+          map["job"] = map["job"]! + 1;
+          addLaps();
+        }
+        else if (map["job"] == 3 && map["shortBreak"] == 2) {
+          localMinutes = 25;
+          colorText = Colors.white;
+          map["shortBreak"] = map["shortBreak"]! + 1;
+        }
+        else if (map["job"] == 3 && map["shortBreak"] == 3 && map["longBreak"] == 0) {
+          localMinutes = 15;
+          colorText = Colors.greenAccent;
+          map["longBreak"] = map["longBreak"]! + 1;
+          map["job"] = map["job"]! + 1;
+          addLaps();
+        }
+        else if (map["job"] == 4 && map["shortBreak"] == 3 && map["longBreak"] == 1) {
+          colorText = Colors.red;
+          stop();
+        }
+
       }
       localSeconds--;
       setState(() {
@@ -124,14 +174,14 @@ List laps = [];
                 child: Text(
                   "$digitHours:$digitMinutes:$digitSeconds",
                   style: TextStyle(
-                    color: Colors.white,
+                    color: colorText,
                     fontSize: 82.0,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
-              /*Container(
-                height: 400.0,
+              Container(
+                height: 200.0,
                 decoration: BoxDecoration(
                   color: Color(0x00151016),
                 ),
@@ -144,6 +194,7 @@ List laps = [];
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
+                          /*
                           Text(
                             "Lap n*${index + 1}",
                             style: TextStyle(
@@ -151,6 +202,7 @@ List laps = [];
                               fontSize: 16.0,
                             ),
                           ),
+                           */
                           Text(
                             "${laps[index]}",
                             style: TextStyle(
@@ -164,7 +216,7 @@ List laps = [];
                   },
                 ),
               ),
-              */
+
               SizedBox(
                 height: 20.0,
               ),
