@@ -6,7 +6,10 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(const MyApp());
 }
+/*
+https://coolors.co/palette/ea698b-d55d92-c05299-ac46a1-973aa8-822faf-6d23b6-6411ad-571089-47126b
 
+ */
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -166,20 +169,37 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
     stop();
     if (map["longBreak"] != 1) {
       showDialog(context: context, builder: (context) {
-        return CupertinoAlertDialog(
-          title: Text("Attention"),
+        return AlertDialog( //or CupertinoAlertDialog
+          backgroundColor: Color(0xFF47126B),
+          title: Text(
+            "Attention",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white
+            ),
+          ),
           actions: [
             MaterialButton(onPressed: () {
               start();
               Navigator.pop(context);
             },
-              child: Text("Continue"),
+              color: Color(0xFFEA698B),
+              child: Text(
+                "Continue",
+                style: TextStyle(
+                    color: Colors.white
+                ),
+              ),
             ),
             MaterialButton(onPressed: () {
               reset();
               Navigator.pop(context);
             },
-              child: Text("Stop"),
+              color: Color(0xFF973AA8),
+              child: Text(
+                "Stop",
+                style: TextStyle(color: Colors.white
+                ),
+              ),
             ),
           ],
         );
@@ -189,14 +209,14 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
       {
         showDialog(context: context, builder: (context) {
           return CupertinoAlertDialog(
-            title: Text("Congratulations!"),
+            title: Text("Congratulations!",style: TextStyle(color: Colors.white),),
             actions: [
               MaterialButton(onPressed: () {
                 reset();
                 start();
                 Navigator.pop(context);
               },
-                child: Text("Start again?"),
+                child: Text("Start again?",style: TextStyle(color: Colors.white),),
               ),
             ],
           );
@@ -207,7 +227,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF151026),
+      backgroundColor: Color(0xFF47126B), // old 0xFF151026
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.all(16.0),
@@ -295,7 +315,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
                         (!started) ?start():stop();
                       },
                       shape: const StadiumBorder(
-                          side: BorderSide(color: Colors.blue)),
+                          side: BorderSide(color: Color(0xFF973AA8))),
                       child: Text(
                         (!started) ? "Start" : "Pause",
                         style: TextStyle(color: Colors.white),
@@ -321,7 +341,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
                       onPressed: () {
                         reset();
                         },
-                      fillColor: Colors.blue,
+                      fillColor: Color(0xFF6411AD),
                       shape: StadiumBorder(),
                       child: Text(
                         "Reset",
