@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -94,38 +95,45 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
         }
       }
       if (localHours == 0 && localMinutes == 0 && localSeconds == 1) {
+        showDiaolog();
         if (map["job"] == 0){
           map["job"] = 1;
           localMinutes = 5;
           colorText = Colors.green;
           addLaps();
+          relax = true;
         }
         else if(map["job"] == 1 && map["shortBreak"] == 0) {
           localMinutes = 25;
           colorText = Colors.white;
           map["shortBreak"] = map["shortBreak"]! + 1;
+          relax = false;
         }
         else if (map["job"] == 1 && map["shortBreak"] == 1) {
           localMinutes = 5;
           colorText = Colors.green;
           map["job"] = map["job"]! + 1;
           addLaps();
+          relax = true;
         }
         else if (map["job"] == 2 && map["shortBreak"] == 1) {
           localMinutes = 25;
           colorText = Colors.white;
           map["shortBreak"] = map["shortBreak"]! + 1;
+          relax = false;
         }
         else if (map["job"] == 2 && map["shortBreak"] == 2) {
           localMinutes = 5;
           colorText = Colors.green;
           map["job"] = map["job"]! + 1;
           addLaps();
+          relax = true;
         }
         else if (map["job"] == 3 && map["shortBreak"] == 2) {
           localMinutes = 25;
           colorText = Colors.white;
           map["shortBreak"] = map["shortBreak"]! + 1;
+          relax = false;
         }
         else if (map["job"] == 3 && map["shortBreak"] == 3 && map["longBreak"] == 0) {
           localMinutes = 15;
@@ -133,6 +141,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
           map["longBreak"] = map["longBreak"]! + 1;
           map["job"] = map["job"]! + 1;
           addLaps();
+          relax = true;
         }
         else if (map["job"] == 4 && map["shortBreak"] == 3 && map["longBreak"] == 1) {
           colorText = Colors.red;
@@ -150,6 +159,49 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
         digitHours = (hours >= 10) ?"$hours":"0$hours";
       });
     });
+  }
+
+  //view gialog windows
+  void showDiaolog() {
+    stop();
+    if (map["longBreak"] != 1) {
+      showDialog(context: context, builder: (context) {
+        return CupertinoAlertDialog(
+          title: Text("Attention"),
+          actions: [
+            MaterialButton(onPressed: () {
+              start();
+              Navigator.pop(context);
+            },
+              child: Text("Continue"),
+            ),
+            MaterialButton(onPressed: () {
+              reset();
+              Navigator.pop(context);
+            },
+              child: Text("Stop"),
+            ),
+          ],
+        );
+      });
+    }
+    else
+      {
+        showDialog(context: context, builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text("Congratulations!"),
+            actions: [
+              MaterialButton(onPressed: () {
+                reset();
+                start();
+                Navigator.pop(context);
+              },
+                child: Text("Start again?"),
+              ),
+            ],
+          );
+        });
+      }
   }
 
   @override
