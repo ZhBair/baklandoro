@@ -33,6 +33,7 @@ int seconds = 0, minutes = 25, hours = 0;
 String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
 Timer? timer;
 bool started = false;
+bool relax = false;
 List laps = [];
 Color colorText = Colors.white;
 Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
@@ -59,8 +60,11 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
       digitMinutes = "25";
       digitHours = "00";
 
+      colorText = Colors.white;
       started = false;
-
+      relax = false;
+      laps.clear();
+      map = {"job": 0, "shortBreak": 0, "longBreak": 0};
     });
   }
 
@@ -176,6 +180,16 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
                   style: TextStyle(
                     color: colorText,
                     fontSize: 82.0,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Center(
+                child: Text(
+                  (!started) ? "" : ((!relax) ? "Keep Working" : "Relax"),
+                  style: TextStyle(
+                    color: colorText,
+                    fontSize: 42.0,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
