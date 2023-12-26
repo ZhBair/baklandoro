@@ -35,7 +35,7 @@ class _HomeAppState extends State<HomeApp> {
 // the buisness logic
 int seconds = 0, minutes = 25, hours = 0;
 String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
-Timer? timer;
+Timer? timer, timerDialog;
 bool started = false;
 bool relax = false;
 List laps = [];
@@ -167,6 +167,13 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
   //view gialog windows
   void showDiaolog() {
     stop();
+    /*
+    int sec = 0;
+    timerDialog = Timer.periodic(Duration(seconds: 1), (timerDialog) {
+
+    });
+
+     */
     if (map["longBreak"] != 1) {
       showDialog(context: context, builder: (context) {
         return AlertDialog( //or CupertinoAlertDialog
@@ -185,10 +192,14 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
               color: Color(0xFFEA698B),
               child: Text(
                 "Continue",
+                textAlign: TextAlign.left,
                 style: TextStyle(
                     color: Colors.white
                 ),
               ),
+            ),
+            SizedBox(
+              width: 15.0,
             ),
             MaterialButton(onPressed: () {
               reset();
@@ -208,15 +219,27 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
     else
       {
         showDialog(context: context, builder: (context) {
-          return CupertinoAlertDialog(
-            title: Text("Congratulations!",style: TextStyle(color: Colors.white),),
+          return AlertDialog(
+            backgroundColor: Color(0xFF47126B),
+            title: Text(
+              "Congratulations!",
+              style: TextStyle(
+                  color: Colors.white
+              ),
+            ),
             actions: [
               MaterialButton(onPressed: () {
                 reset();
                 start();
                 Navigator.pop(context);
               },
-                child: Text("Start again?",style: TextStyle(color: Colors.white),),
+                color: Color(0xFF973AA8),
+                child: Text(
+                  "Start again?",
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
+                ),
               ),
             ],
           );
@@ -315,7 +338,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
                         (!started) ?start():stop();
                       },
                       shape: const StadiumBorder(
-                          side: BorderSide(color: Color(0xFF973AA8))),
+                          side: BorderSide(color: Color(0xFF6411AD))), //0xFF973AA8
                       child: Text(
                         (!started) ? "Start" : "Pause",
                         style: TextStyle(color: Colors.white),
