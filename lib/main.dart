@@ -198,6 +198,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
               Navigator.pop(context);
               flag = true;
             },
+              minWidth: 50.0,
               color: Color(0xFFEA698B),
               child: Text(
                 "Continue",
@@ -214,6 +215,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
               reset();
               Navigator.pop(context);
             },
+              minWidth: 100.0,
               color: Color(0xFF973AA8),
               child: Text(
                 "Stop",
@@ -243,6 +245,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
                 start();
                 Navigator.pop(context);
               },
+                minWidth: 100.0,
                 color: Color(0xFF973AA8),
                 child: Text(
                   "Start again?",
