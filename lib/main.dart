@@ -167,13 +167,21 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
   //view gialog windows
   void showDiaolog() {
     stop();
-    /*
+    bool flag = false;
     int sec = 0;
     timerDialog = Timer.periodic(Duration(seconds: 1), (timerDialog) {
-
+    sec++;
+    if (sec == 10) {
+      timerDialog.cancel();
+      if (!flag) {
+        Navigator.pop(context);
+        start();
+      }
+    }
+    print('done $sec');
     });
 
-     */
+
     if (map["longBreak"] != 1) {
       showDialog(context: context, builder: (context) {
         return AlertDialog( //or CupertinoAlertDialog
@@ -188,6 +196,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
             MaterialButton(onPressed: () {
               start();
               Navigator.pop(context);
+              flag = true;
             },
               color: Color(0xFFEA698B),
               child: Text(
@@ -218,6 +227,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
     }
     else
       {
+        flag = true;
         showDialog(context: context, builder: (context) {
           return AlertDialog(
             backgroundColor: Color(0xFF47126B),
