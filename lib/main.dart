@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wakelock/wakelock.dart';
+//import 'package:window_manager/window_manager.dart';
 
 void main() {
   runApp(const MyApp());
@@ -46,7 +46,6 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
 //creat stop timer function
 
   void stop() {
-    Wakelock.disable();
     timer!.cancel();
     setState(() {
       started = false;
@@ -56,7 +55,6 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
 //creat RESET function
 
   void reset() {
-    Wakelock.disable();
     timer!.cancel();
     setState(() {
       seconds = 0;
@@ -85,7 +83,6 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
 
   //creat START function
   void start() {
-    Wakelock.enable();
     started = true;
     timer = Timer.periodic(Duration(milliseconds: 10), (timer) { //change seconds to milis
       int localSeconds = seconds;
