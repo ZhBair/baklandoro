@@ -1,8 +1,7 @@
 import 'dart:async';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-//import 'package:window_manager/window_manager.dart';
+import 'package:keep_screen_on/keep_screen_on.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,14 +33,14 @@ class _HomeAppState extends State<HomeApp> {
 
 
 // the buisness logic
-int seconds = 0, minutes = 25, hours = 0;
-String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
-Timer? timer, timerDialog;
-bool started = false;
-bool relax = false;
-List laps = [];
-Color colorText = Colors.white;
-Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
+  int seconds = 0, minutes = 25, hours = 0;
+  String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
+  Timer? timer, timerDialog;
+  bool started = false;
+  bool relax = false;
+  List laps = [];
+  Color colorText = Colors.white;
+  Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
 
 //creat stop timer function
 
@@ -55,6 +54,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
 //creat RESET function
 
   void reset() {
+    KeepScreenOn.turnOff();
     timer!.cancel();
     setState(() {
       seconds = 0;
@@ -83,8 +83,9 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
 
   //creat START function
   void start() {
+    KeepScreenOn.turnOn();
     started = true;
-    timer = Timer.periodic(Duration(milliseconds: 10), (timer) { //change seconds to milis
+    timer = Timer.periodic(Duration(seconds: 1), (timer) { //change seconds to milis
       int localSeconds = seconds;
       int localMinutes = minutes;
       int localHours = hours;
@@ -171,15 +172,15 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
     bool flag = false;
     int sec = 0;
     timerDialog = Timer.periodic(Duration(seconds: 1), (timerDialog) {
-    sec++;
-    if (sec == 10) {
-      timerDialog.cancel();
-      if (!flag) {
-        Navigator.pop(context);
-        start();
+      sec++;
+      if (sec == 10) {
+        timerDialog.cancel();
+        if (!flag) {
+          Navigator.pop(context);
+          start();
+        }
       }
-    }
-    print('done $sec');
+      print('done $sec');
     });
 
 
@@ -229,36 +230,36 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
       });
     }
     else
-      {
-        flag = true;
-        showDialog(context: context, builder: (context) {
-          return AlertDialog(
-            backgroundColor: Color(0xFF47126B),
-            title: Text(
-              "Congratulations!",
-              style: TextStyle(
-                  color: Colors.white
-              ),
+    {
+      flag = true;
+      showDialog(context: context, builder: (context) {
+        return AlertDialog(
+          backgroundColor: Color(0xFF47126B),
+          title: Text(
+            "Congratulations!",
+            style: TextStyle(
+                color: Colors.white
             ),
-            actions: [
-              MaterialButton(onPressed: () {
-                reset();
-                start();
-                Navigator.pop(context);
-              },
-                minWidth: 100.0,
-                color: Color(0xFF973AA8),
-                child: Text(
-                  "Start again?",
-                  style: TextStyle(
-                      color: Colors.white
-                  ),
+          ),
+          actions: [
+            MaterialButton(onPressed: () {
+              reset();
+              start();
+              Navigator.pop(context);
+            },
+              minWidth: 100.0,
+              color: Color(0xFF973AA8),
+              child: Text(
+                "Start again?",
+                style: TextStyle(
+                    color: Colors.white
                 ),
               ),
-            ],
-          );
-        });
-      }
+            ),
+          ],
+        );
+      });
+    }
   }
 
   @override
@@ -377,7 +378,7 @@ Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
                     child: RawMaterialButton(
                       onPressed: () {
                         reset();
-                        },
+                      },
                       fillColor: Color(0xFF6411AD),
                       shape: StadiumBorder(),
                       child: Text(
