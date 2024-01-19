@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
-import 'package:keep_screen_on/keep_screen_on.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 
 void main() {
   runApp(const MyApp());
 }
+
 /*
 https://coolors.co/palette/ea698b-d55d92-c05299-ac46a1-973aa8-822faf-6d23b6-6411ad-571089-47126b
 
@@ -29,9 +30,6 @@ class HomeApp extends StatefulWidget {
 }
 
 class _HomeAppState extends State<HomeApp> {
-
-
-
 // the buisness logic
   int seconds = 0, minutes = 25, hours = 0;
   String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
@@ -45,7 +43,7 @@ class _HomeAppState extends State<HomeApp> {
 //creat stop timer function
 
   void stop() {
-    timer!.cancel();
+    timer?.cancel();
     setState(() {
       started = false;
     });
@@ -53,9 +51,8 @@ class _HomeAppState extends State<HomeApp> {
 
 //creat RESET function
 
-  void reset() {
-    KeepScreenOn.turnOff();
-    timer!.cancel();
+  void _resetInternal() {
+    timer?.cancel();
     setState(() {
       seconds = 0;
       minutes = 25;
@@ -73,6 +70,10 @@ class _HomeAppState extends State<HomeApp> {
     });
   }
 
+  Future<void> reset() async {
+    await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_KEEP_SCREEN_ON).then((value) => _resetInternal());
+  }
+
   void addLaps() {
     int? j = map["job"];
     String lap = "JOB : $j";
@@ -81,11 +82,10 @@ class _HomeAppState extends State<HomeApp> {
     });
   }
 
-  //creat START function
-  void start() {
-    KeepScreenOn.turnOn();
+  void _startInternal() {
     started = true;
-    timer = Timer.periodic(Duration(seconds: 1), (timer) { //change seconds to milis
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      //change seconds to milis
       int localSeconds = seconds;
       int localMinutes = minutes;
       int localHours = hours;
@@ -101,69 +101,68 @@ class _HomeAppState extends State<HomeApp> {
       }
       if (localHours == 0 && localMinutes == 0 && localSeconds == 1) {
         showDiaolog();
-        if (map["job"] == 0){
+        if (map["job"] == 0) {
           map["job"] = 1;
           localMinutes = 5;
           colorText = Colors.green;
           addLaps();
           relax = true;
-        }
-        else if(map["job"] == 1 && map["shortBreak"] == 0) {
+        } else if (map["job"] == 1 && map["shortBreak"] == 0) {
           localMinutes = 25;
           colorText = Colors.white;
           map["shortBreak"] = map["shortBreak"]! + 1;
           relax = false;
-        }
-        else if (map["job"] == 1 && map["shortBreak"] == 1) {
+        } else if (map["job"] == 1 && map["shortBreak"] == 1) {
           localMinutes = 5;
           colorText = Colors.green;
           map["job"] = map["job"]! + 1;
           addLaps();
           relax = true;
-        }
-        else if (map["job"] == 2 && map["shortBreak"] == 1) {
+        } else if (map["job"] == 2 && map["shortBreak"] == 1) {
           localMinutes = 25;
           colorText = Colors.white;
           map["shortBreak"] = map["shortBreak"]! + 1;
           relax = false;
-        }
-        else if (map["job"] == 2 && map["shortBreak"] == 2) {
+        } else if (map["job"] == 2 && map["shortBreak"] == 2) {
           localMinutes = 5;
           colorText = Colors.green;
           map["job"] = map["job"]! + 1;
           addLaps();
           relax = true;
-        }
-        else if (map["job"] == 3 && map["shortBreak"] == 2) {
+        } else if (map["job"] == 3 && map["shortBreak"] == 2) {
           localMinutes = 25;
           colorText = Colors.white;
           map["shortBreak"] = map["shortBreak"]! + 1;
           relax = false;
-        }
-        else if (map["job"] == 3 && map["shortBreak"] == 3 && map["longBreak"] == 0) {
+        } else if (map["job"] == 3 && map["shortBreak"] == 3 && map["longBreak"] == 0) {
           localMinutes = 15;
           colorText = Colors.greenAccent;
           map["longBreak"] = map["longBreak"]! + 1;
           map["job"] = map["job"]! + 1;
           addLaps();
           relax = true;
-        }
-        else if (map["job"] == 4 && map["shortBreak"] == 3 && map["longBreak"] == 1) {
+        } else if (map["job"] == 4 && map["shortBreak"] == 3 && map["longBreak"] == 1) {
           colorText = Colors.red;
           stop();
         }
-
       }
       localSeconds--;
       setState(() {
         seconds = localSeconds;
         minutes = localMinutes;
         hours = localHours;
-        digitSeconds = (seconds >= 10) ?"$seconds":"0$seconds";
-        digitMinutes = (minutes >= 10) ?"$minutes":"0$minutes";
-        digitHours = (hours >= 10) ?"$hours":"0$hours";
+        digitSeconds = (seconds >= 10) ? "$seconds" : "0$seconds";
+        digitMinutes = (minutes >= 10) ? "$minutes" : "0$minutes";
+        digitHours = (hours >= 10) ? "$hours" : "0$hours";
       });
     });
+  }
+
+  //creat START function
+  Future<void> start() async {
+    await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_KEEP_SCREEN_ON).then(
+      (value) => _startInternal(),
+    );
   }
 
   //view gialog windows
@@ -183,82 +182,79 @@ class _HomeAppState extends State<HomeApp> {
       print('done $sec');
     });
 
-
     if (map["longBreak"] != 1) {
-      showDialog(context: context, builder: (context) {
-        return AlertDialog( //or CupertinoAlertDialog
-          backgroundColor: Color(0xFF47126B),
-          title: Text(
-            "Attention",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white
-            ),
-          ),
-          actions: [
-            MaterialButton(onPressed: () {
-              start();
-              Navigator.pop(context);
-              flag = true;
-            },
-              minWidth: 50.0,
-              color: Color(0xFFEA698B),
-              child: Text(
-                "Continue",
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                    color: Colors.white
-                ),
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              //or CupertinoAlertDialog
+              backgroundColor: Color(0xFF47126B),
+              title: Text(
+                "Attention",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white),
               ),
-            ),
-            SizedBox(
-              width: 15.0,
-            ),
-            MaterialButton(onPressed: () {
-              reset();
-              Navigator.pop(context);
-            },
-              minWidth: 100.0,
-              color: Color(0xFF973AA8),
-              child: Text(
-                "Stop",
-                style: TextStyle(color: Colors.white
+              actions: [
+                MaterialButton(
+                  onPressed: () {
+                    start();
+                    Navigator.pop(context);
+                    flag = true;
+                  },
+                  minWidth: 50.0,
+                  color: Color(0xFFEA698B),
+                  child: Text(
+                    "Continue",
+                    textAlign: TextAlign.left,
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              ),
-            ),
-          ],
-        );
-      });
-    }
-    else
-    {
+                SizedBox(
+                  width: 15.0,
+                ),
+                MaterialButton(
+                  onPressed: () {
+                    reset();
+                    Navigator.pop(context);
+                  },
+                  minWidth: 100.0,
+                  color: Color(0xFF973AA8),
+                  child: Text(
+                    "Stop",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          });
+    } else {
       flag = true;
-      showDialog(context: context, builder: (context) {
-        return AlertDialog(
-          backgroundColor: Color(0xFF47126B),
-          title: Text(
-            "Congratulations!",
-            style: TextStyle(
-                color: Colors.white
-            ),
-          ),
-          actions: [
-            MaterialButton(onPressed: () {
-              reset();
-              start();
-              Navigator.pop(context);
-            },
-              minWidth: 100.0,
-              color: Color(0xFF973AA8),
-              child: Text(
-                "Start again?",
-                style: TextStyle(
-                    color: Colors.white
-                ),
+      showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: Color(0xFF47126B),
+              title: Text(
+                "Congratulations!",
+                style: TextStyle(color: Colors.white),
               ),
-            ),
-          ],
-        );
-      });
+              actions: [
+                MaterialButton(
+                  onPressed: () {
+                    reset();
+                    start();
+                    Navigator.pop(context);
+                  },
+                  minWidth: 100.0,
+                  color: Color(0xFF973AA8),
+                  child: Text(
+                    "Start again?",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            );
+          });
     }
   }
 
@@ -340,7 +336,6 @@ class _HomeAppState extends State<HomeApp> {
                   },
                 ),
               ),
-
               SizedBox(
                 height: 20.0,
               ),
@@ -350,10 +345,9 @@ class _HomeAppState extends State<HomeApp> {
                   Expanded(
                     child: RawMaterialButton(
                       onPressed: () {
-                        (!started) ?start():stop();
+                        (!started) ? start() : stop();
                       },
-                      shape: const StadiumBorder(
-                          side: BorderSide(color: Color(0xFF6411AD))), //0xFF973AA8
+                      shape: const StadiumBorder(side: BorderSide(color: Color(0xFF6411AD))), //0xFF973AA8
                       child: Text(
                         (!started) ? "Start" : "Pause",
                         style: TextStyle(color: Colors.white),
