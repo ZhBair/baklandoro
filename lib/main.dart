@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
+import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: HomeApp(),
     );
   }
@@ -84,7 +85,7 @@ class _HomeAppState extends State<HomeApp> {
 
   void _startInternal() {
     started = true;
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       //change seconds to milis
       int localSeconds = seconds;
       int localMinutes = minutes;
@@ -168,9 +169,10 @@ class _HomeAppState extends State<HomeApp> {
   //view gialog windows
   void showDiaolog() {
     stop();
+    FlutterRingtonePlayer().playNotification(looping: false);
     bool flag = false;
     int sec = 0;
-    timerDialog = Timer.periodic(Duration(seconds: 1), (timerDialog) {
+    timerDialog = Timer.periodic(const Duration(seconds: 1), (timerDialog) {
       sec++;
       if (sec == 10) {
         timerDialog.cancel();
@@ -188,8 +190,8 @@ class _HomeAppState extends State<HomeApp> {
           builder: (context) {
             return AlertDialog(
               //or CupertinoAlertDialog
-              backgroundColor: Color(0xFF47126B),
-              title: Text(
+              backgroundColor: const Color(0xFF47126B),
+              title: const Text(
                 "Attention",
                 textAlign: TextAlign.center,
                 style: TextStyle(color: Colors.white),
@@ -202,14 +204,14 @@ class _HomeAppState extends State<HomeApp> {
                     flag = true;
                   },
                   minWidth: 50.0,
-                  color: Color(0xFFEA698B),
-                  child: Text(
+                  color: const Color(0xFFEA698B),
+                  child: const Text(
                     "Continue",
                     textAlign: TextAlign.left,
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 15.0,
                 ),
                 MaterialButton(
@@ -218,8 +220,8 @@ class _HomeAppState extends State<HomeApp> {
                     Navigator.pop(context);
                   },
                   minWidth: 100.0,
-                  color: Color(0xFF973AA8),
-                  child: Text(
+                  color: const Color(0xFF973AA8),
+                  child: const Text(
                     "Stop",
                     style: TextStyle(color: Colors.white),
                   ),
@@ -233,8 +235,8 @@ class _HomeAppState extends State<HomeApp> {
           context: context,
           builder: (context) {
             return AlertDialog(
-              backgroundColor: Color(0xFF47126B),
-              title: Text(
+              backgroundColor: const Color(0xFF47126B),
+              title: const Text(
                 "Congratulations!",
                 style: TextStyle(color: Colors.white),
               ),
@@ -246,8 +248,8 @@ class _HomeAppState extends State<HomeApp> {
                     Navigator.pop(context);
                   },
                   minWidth: 100.0,
-                  color: Color(0xFF973AA8),
-                  child: Text(
+                  color: const Color(0xFF973AA8),
+                  child: const Text(
                     "Start again?",
                     style: TextStyle(color: Colors.white),
                   ),
@@ -261,15 +263,15 @@ class _HomeAppState extends State<HomeApp> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF47126B), // old 0xFF151026
+      backgroundColor: const Color(0xFF47126B), // old 0xFF151026
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Center(
+              const Center(
                 child: Text("Baklandoro App",
                     style: TextStyle(
                       color: Colors.white,
@@ -277,7 +279,7 @@ class _HomeAppState extends State<HomeApp> {
                       fontWeight: FontWeight.bold,
                     )),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               Center(
@@ -302,7 +304,7 @@ class _HomeAppState extends State<HomeApp> {
               ),
               Container(
                 height: 200.0,
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color(0x00151016),
                 ),
                 //add in list build
@@ -325,7 +327,7 @@ class _HomeAppState extends State<HomeApp> {
                            */
                           Text(
                             "${laps[index]}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 16.0,
                             ),
@@ -336,7 +338,7 @@ class _HomeAppState extends State<HomeApp> {
                   },
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20.0,
               ),
               Row(
@@ -350,7 +352,7 @@ class _HomeAppState extends State<HomeApp> {
                       shape: const StadiumBorder(side: BorderSide(color: Color(0xFF6411AD))), //0xFF973AA8
                       child: Text(
                         (!started) ? "Start" : "Pause",
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                     ),
                   ),
@@ -373,9 +375,9 @@ class _HomeAppState extends State<HomeApp> {
                       onPressed: () {
                         reset();
                       },
-                      fillColor: Color(0xFF6411AD),
-                      shape: StadiumBorder(),
-                      child: Text(
+                      fillColor: const Color(0xFF6411AD),
+                      shape: const StadiumBorder(),
+                      child: const Text(
                         "Reset",
                         style: TextStyle(color: Colors.white),
                       ),
