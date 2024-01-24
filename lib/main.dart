@@ -44,6 +44,7 @@ class _HomeAppState extends State<HomeApp> {
 //creat stop timer function
 
   void stop() {
+    FlutterRingtonePlayer().stop();
     timer?.cancel();
     setState(() {
       started = false;
@@ -53,6 +54,7 @@ class _HomeAppState extends State<HomeApp> {
 //creat RESET function
 
   void _resetInternal() {
+    FlutterRingtonePlayer().stop();
     timer?.cancel();
     setState(() {
       seconds = 0;
