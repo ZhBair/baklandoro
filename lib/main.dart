@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MyApp());
@@ -318,15 +319,6 @@ class _HomeAppState extends State<HomeApp> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          /*
-                          Text(
-                            "Lap n*${index + 1}",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                           */
                           Text(
                             "${laps[index]}",
                             style: const TextStyle(
@@ -358,20 +350,6 @@ class _HomeAppState extends State<HomeApp> {
                       ),
                     ),
                   ),
-                  /*
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                  IconButton(
-                      color: Colors.white,
-                      onPressed: () {
-                        addLaps();
-                      },
-                      icon: Icon(Icons.flag)),
-                  SizedBox(
-                    width: 8.0,
-                  ),
-                   */
                   Expanded(
                     child: RawMaterialButton(
                       onPressed: () {
