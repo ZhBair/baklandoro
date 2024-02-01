@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
@@ -11,7 +10,7 @@ void main() {
 
 /*
 https://coolors.co/palette/ea698b-d55d92-c05299-ac46a1-973aa8-822faf-6d23b6-6411ad-571089-47126b
-
+flutter
  */
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -41,6 +40,7 @@ class _HomeAppState extends State<HomeApp> {
   List laps = [];
   Color colorText = Colors.white;
   Map<String, int> map = {"job": 0, "shortBreak": 0, "longBreak": 0};
+  bool orient = true;
 
 //creat stop timer function
 
@@ -88,7 +88,7 @@ class _HomeAppState extends State<HomeApp> {
 
   void _startInternal() {
     started = true;
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
       //change seconds to milis
       int localSeconds = seconds;
       int localMinutes = minutes;
@@ -286,13 +286,42 @@ class _HomeAppState extends State<HomeApp> {
                 height: 20.0,
               ),
               Center(
-                child: Text(
-                  "$digitHours:$digitMinutes:$digitSeconds",
-                  style: TextStyle(
-                    color: colorText,
-                    fontSize: 82.0,
-                    fontWeight: FontWeight.w600,
-                  ),
+                child: Column(
+                  children: [
+                    Text(
+                      "$digitHours:$digitMinutes:$digitSeconds",
+                      style: TextStyle(
+                        color: colorText,
+                        fontSize: 82.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    Container(
+                      alignment: Alignment.centerRight,
+                      child: Ink(
+                        decoration: const ShapeDecoration(
+                          color: Colors.white,
+                          shape: CircleBorder(),
+                        ),
+                        child: IconButton(
+                          icon: const Icon(Icons.rotate_left),
+                          color: const Color(0xFF973AA8),
+                          onPressed: () {
+                            if (orient){
+                              SystemChrome.setPreferredOrientations(
+                                  [DeviceOrientation.landscapeLeft]);
+                                  orient = false;
+                            }
+                            else{
+                              SystemChrome.setPreferredOrientations(
+                                  [DeviceOrientation.portraitUp]);
+                                  orient = true;
+                            }
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Center(
@@ -308,7 +337,7 @@ class _HomeAppState extends State<HomeApp> {
               Container(
                 height: 200.0,
                 decoration: const BoxDecoration(
-                  color: Color(0x00151016),
+                  color: Colors.black,  //0x00151016
                 ),
                 //add in list build
                 child: ListView.builder(
