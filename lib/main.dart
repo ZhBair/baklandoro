@@ -47,6 +47,7 @@ class _HomeAppState extends State<HomeApp> {
   void stop() {
     FlutterRingtonePlayer().stop();
     timer?.cancel();
+    timerDialog?.cancel();
     setState(() {
       started = false;
     });
@@ -57,6 +58,7 @@ class _HomeAppState extends State<HomeApp> {
   void _resetInternal() {
     FlutterRingtonePlayer().stop();
     timer?.cancel();
+    timerDialog?.cancel();
     setState(() {
       seconds = 0;
       minutes = 25;
@@ -270,134 +272,269 @@ class _HomeAppState extends State<HomeApp> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              const Center(
-                child: Text("Baklandoro App",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 28.0,
-                      fontWeight: FontWeight.bold,
-                    )),
-              ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Center(
-                child: Column(
-                  children: [
-                    Text(
-                      "$digitHours:$digitMinutes:$digitSeconds",
-                      style: TextStyle(
-                        color: colorText,
-                        fontSize: 82.0,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Container(
-                      alignment: Alignment.centerRight,
-                      child: Ink(
-                        decoration: const ShapeDecoration(
-                          color: Colors.white,
-                          shape: CircleBorder(),
-                        ),
-                        child: IconButton(
-                          icon: const Icon(Icons.rotate_left),
-                          color: const Color(0xFF973AA8),
-                          onPressed: () {
-                            if (orient){
-                              SystemChrome.setPreferredOrientations(
-                                  [DeviceOrientation.landscapeLeft]);
-                                  orient = false;
-                            }
-                            else{
-                              SystemChrome.setPreferredOrientations(
-                                  [DeviceOrientation.portraitUp]);
-                                  orient = true;
-                            }
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Center(
-                child: Text(
-                  (!started) ? "" : ((!relax) ? "Keep Working" : "Relax"),
+          child: OrientationBuilder(
+            builder: (context, orientation) =>
+            orientation == Orientation.portrait
+                ? buildPortrait()
+                : buildLandscape(),
+          ),
+        ),
+        ),
+      );
+
+  }
+
+  Widget buildPortrait() =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Center(
+            child: Text("Baklandoro App",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 28.0,
+                  fontWeight: FontWeight.bold,
+                )),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          Center(
+            child: Column(
+              children: [
+                Text(
+                  "$digitHours:$digitMinutes:$digitSeconds",
                   style: TextStyle(
                     color: colorText,
-                    fontSize: 42.0,
+                    fontSize: 82.0,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
-              ),
-              Container(
-                height: 200.0,
-                decoration: const BoxDecoration(
-                  color: Colors.black,  //0x00151016
+                Container(
+                  alignment: Alignment.centerRight,
+                  child: Ink(
+                    decoration: const ShapeDecoration(
+                      color: Colors.white,
+                      shape: CircleBorder(),
+                    ),
+                    child: IconButton(
+                      icon: const Icon(Icons.rotate_left),
+                      color: const Color(0xFF973AA8),
+                      onPressed: () {
+                        if (orient){
+                          SystemChrome.setPreferredOrientations(
+                              [DeviceOrientation.landscapeLeft]);
+                          orient = false;
+                        }
+                        else{
+                          SystemChrome.setPreferredOrientations(
+                              [DeviceOrientation.portraitUp]);
+                          orient = true;
+                        }
+                      },
+                    ),
+                  ),
                 ),
-                //add in list build
-                child: ListView.builder(
-                  itemCount: laps.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "${laps[index]}",
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16.0,
-                            ),
-                          ),
-                        ],
+              ],
+            ),
+          ),
+          Center(
+            child: Text(
+              (!started) ? "" : ((!relax) ? "Keep Working" : "Relax"),
+              style: TextStyle(
+                color: colorText,
+                fontSize: 42.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Container(
+            height: 200.0,
+            decoration: const BoxDecoration(
+              color: Color(0x00151016),  //0x00151016
+            ),
+            //add in list build
+            child: ListView.builder(
+              itemCount: laps.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${laps[index]}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
                       ),
-                    );
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 20.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    (!started) ? start() : stop();
                   },
+                  shape: const StadiumBorder(side: BorderSide(color: Color(0xFF6411AD))), //0xFF973AA8
+                  child: Text(
+                    (!started) ? "Start" : "Pause",
+                    style: const TextStyle(color: Colors.white),
+                  ),
                 ),
               ),
-              const SizedBox(
-                height: 20.0,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: RawMaterialButton(
-                      onPressed: () {
-                        (!started) ? start() : stop();
-                      },
-                      shape: const StadiumBorder(side: BorderSide(color: Color(0xFF6411AD))), //0xFF973AA8
-                      child: Text(
-                        (!started) ? "Start" : "Pause",
-                        style: const TextStyle(color: Colors.white),
-                      ),
-                    ),
+              Expanded(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    reset();
+                  },
+                  fillColor: const Color(0xFF6411AD),
+                  shape: const StadiumBorder(),
+                  child: const Text(
+                    "Reset",
+                    style: TextStyle(color: Colors.white),
                   ),
-                  Expanded(
-                    child: RawMaterialButton(
-                      onPressed: () {
-                        reset();
-                      },
-                      fillColor: const Color(0xFF6411AD),
-                      shape: const StadiumBorder(),
-                      child: const Text(
-                        "Reset",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
+        ],
+      );
+  Widget buildLandscape() =>
+      Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Center(
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: Container(
+                    padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.10),
+                    child: Text(
+                      "$digitHours:$digitMinutes:$digitSeconds",
+                      style: TextStyle(
+                        color: colorText,
+                        fontSize: 140.0,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    alignment: Alignment.centerRight,
+                    child: Ink(
+                      decoration: const ShapeDecoration(
+                        color: Colors.white,
+                        shape: CircleBorder(),
+                      ),
+                      child: IconButton(
+                        icon: const Icon(Icons.rotate_left),
+                        color: const Color(0xFF973AA8),
+                        onPressed: () {
+                          if (orient){
+                            SystemChrome.setPreferredOrientations(
+                                [DeviceOrientation.landscapeLeft]);
+                            orient = false;
+                          }
+                          else{
+                            SystemChrome.setPreferredOrientations(
+                                [DeviceOrientation.portraitUp]);
+                            orient = true;
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Center(
+            child: Text(
+              (!started) ? "" : ((!relax) ? "Keep Working" : "Relax"),
+              style: TextStyle(
+                color: colorText,
+                fontSize: 22.0,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          Container(
+            height: 0.0,
+            decoration: const BoxDecoration(
+              color: Colors.green,  //0x00151016
+            ),
+            //add in list build
+            child: ListView.builder(
+              itemCount: laps.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "${laps[index]}",
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+          const SizedBox(
+            height: 0.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    (!started) ? start() : stop();
+                  },
+                  shape: const StadiumBorder(side: BorderSide(color: Color(0xFF6411AD))), //0xFF973AA8
+                  child: Text(
+                    (!started) ? "Start" : "Pause",
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+              Expanded(
+                child: RawMaterialButton(
+                  onPressed: () {
+                    reset();
+                  },
+                  fillColor: const Color(0xFF6411AD),
+                  shape: const StadiumBorder(),
+                  child: const Text(
+                    "Reset",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      );
 }
