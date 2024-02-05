@@ -90,7 +90,7 @@ class _HomeAppState extends State<HomeApp> {
 
   void _startInternal() {
     started = true;
-    timer = Timer.periodic(const Duration(milliseconds: 10), (timer) {
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       //change seconds to milis
       int localSeconds = seconds;
       int localMinutes = minutes;
@@ -323,11 +323,17 @@ class _HomeAppState extends State<HomeApp> {
                       color: const Color(0xFF973AA8),
                       onPressed: () {
                         if (orient){
+                          // hide status bar
+                          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+                          // change orientation app
                           SystemChrome.setPreferredOrientations(
                               [DeviceOrientation.landscapeLeft]);
                           orient = false;
                         }
                         else{
+                          // hide status bar
+                          SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+                          // change orientation app
                           SystemChrome.setPreferredOrientations(
                               [DeviceOrientation.portraitUp]);
                           orient = true;
@@ -411,6 +417,8 @@ class _HomeAppState extends State<HomeApp> {
           ),
         ],
       );
+
+
   Widget buildLandscape() =>
       Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -448,11 +456,17 @@ class _HomeAppState extends State<HomeApp> {
                         color: const Color(0xFF973AA8),
                         onPressed: () {
                           if (orient){
+                            // hide status bar
+                            SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+                            // change orientation app
                             SystemChrome.setPreferredOrientations(
                                 [DeviceOrientation.landscapeLeft]);
                             orient = false;
                           }
                           else{
+                            // hide status bar
+                            SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: SystemUiOverlay.values);
+                            // change orientation app
                             SystemChrome.setPreferredOrientations(
                                 [DeviceOrientation.portraitUp]);
                             orient = true;
