@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,6 +32,7 @@ class HomeApp extends StatefulWidget {
 }
 
 class _HomeAppState extends State<HomeApp> {
+
 // the buisness logic
   int seconds = 0, minutes = 25, hours = 0;
   String digitSeconds = "00", digitMinutes = "25", digitHours = "00";
@@ -89,6 +91,7 @@ class _HomeAppState extends State<HomeApp> {
   }
 
   void _startInternal() {
+    FlutterRingtonePlayer().stop();
     started = true;
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       //change seconds to milis
@@ -281,7 +284,6 @@ class _HomeAppState extends State<HomeApp> {
         ),
         ),
       );
-
   }
 
   Widget buildPortrait() =>
@@ -452,7 +454,7 @@ class _HomeAppState extends State<HomeApp> {
                         shape: CircleBorder(),
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.rotate_left),
+                        icon: const Icon(Icons.rotate_right),
                         color: const Color(0xFF973AA8),
                         onPressed: () {
                           if (orient){
