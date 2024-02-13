@@ -1,11 +1,12 @@
 import 'dart:async';
+import 'package:baklandoro/main2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:flutter/services.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp( MyApp2());
 }
 
 /*
