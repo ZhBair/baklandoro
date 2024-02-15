@@ -1,3 +1,4 @@
+import 'package:baklandoro/timertext.dart';
 import 'package:flutter/material.dart';
 
 class LandscapeContent extends StatelessWidget {
@@ -16,15 +17,7 @@ class LandscapeContent extends StatelessWidget {
                 flex: 5,
                 child: Container(
                   padding: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.10),
-                  child: const Text(
-                    "00:00:00 (time)",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 140.0,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  child: const TimerText(),
                 ),
               ),
               Expanded(
@@ -49,7 +42,7 @@ class LandscapeContent extends StatelessWidget {
         ),
         const Center(
           child: Text(
-            "Placeholder Relax",
+            "Work ? Relax",
             style: TextStyle(
               color: Colors.white,
               fontSize: 22.0,
